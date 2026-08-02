@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>TFlix remote navigation regression test</title>
+  <style>
+    body { margin: 40px; background: #111; color: #fff; font-family: sans-serif; }
+    #grid { display: flex; gap: 24px; }
+    .movie-card { width: 180px; height: 260px; background: #333; border-radius: 8px; }
+    .movie-card a { display: grid; width: 100%; height: 100%; place-items: center; color: #fff; }
+  </style>
+  <script>
+    // Reproduce the WebKit condition that previously disabled TFlix's polyfill.
+    window.navigate = function nativeTizenNavigate() {};
+    window.tizen = { tvinputdevice: { registerKey: function () {} } };
+  </script>
+</head>
+<body>
+  <h1>TFlix remote navigation regression test</h1>
+  <output id="result">No movie selected</output>
+  <div id="grid">
+    <div class="movie-card"><a href="#movie-1">Movie 1</a></div>
+    <div class="movie-card"><a href="#movie-2">Movie 2</a></div>
+    <div class="movie-card"><a href="#movie-3">Movie 3</a></div>
+  </div>
+  <script>
+    document.querySelectorAll('.movie-card a').forEach(function (link) {
+      link.addEventListener('click', function (event) {
+        event.preventDefault();
+        document.getElementById('result').textContent = 'Selected ' + link.textContent;
+      });
+    });
+  </script>
+  <script src="../dist/userScript.js"></script>
+</body>
+</html>
