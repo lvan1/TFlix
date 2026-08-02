@@ -1,8 +1,8 @@
 # Node dependencies
 node_modules/
 
-# Build output
-/dist/
+# Build output is intentionally committed so GitHub-installed TizenBrew test modules contain
+# the runtime files referenced by package.json.
 
 # Logs
 npm-debug.log*
