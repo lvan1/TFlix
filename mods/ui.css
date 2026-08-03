@@ -59,6 +59,8 @@ body.tflix-navigation-mode {
 }
 
 .tflix-control-button.focused,
+.tflix-control-button:focus,
+.tflix-control-button.active,
 .tflix-control-button:hover {
   background: rgba(255, 255, 255, 0.6);
   transform: scale(1.1);
@@ -139,6 +141,48 @@ body.tflix-navigation-mode {
  * stale node while the updated module takes over. */
 .tflix-video-time {
   display: none !important;
+}
+
+.tflix-subtitle-button {
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: 800;
+  flex: 0 0 50px;
+}
+
+.tflix-subtitle-menu {
+  position: absolute;
+  right: 22px;
+  bottom: 82px;
+  width: 300px;
+  max-height: 55vh;
+  overflow-y: auto;
+  display: none;
+  flex-direction: column;
+  padding: 10px;
+  border-radius: 10px;
+  background: rgba(8, 8, 8, 0.96);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.65);
+}
+
+.tflix-subtitle-menu.show {
+  display: flex;
+}
+
+.tflix-subtitle-option {
+  min-height: 48px;
+  padding: 8px 14px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #fff;
+  text-align: left;
+  font-size: 20px;
+}
+
+.tflix-subtitle-option.selected {
+  background: #fff;
+  color: #111;
 }
 
 /* Enhanced Play Button styling. The site's own "is this a play button" heuristic

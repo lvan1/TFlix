@@ -1,9 +1,12 @@
 /*global navigate*/
 import css from './ui.css';
 import { isRealCinebyPlayer } from './playerDetection.js';
+import { createSubtitleController } from './subtitles.js';
 
 let videoElement = null;
 let playerControls = null;
+let subtitleController = null;
+let videoKeyHandlerInstalled = false;
 let progressBar = null;
 let progressFilled = null;
 let hideControlsTimeout = null;
@@ -333,20 +336,22 @@ function fixVideoPlaybackIssues(video) {
   if (!video.hasAttribute('preload')) {
     video.setAttribute('preload', 'auto');
   }
+
+  // Keep the current player available to the remote handler. Install the document listener only
+  // once because Cineby's client-side player can be replaced without reloading the page.
+  window.tflixVideoElement = video;
+  if (!videoKeyHandlerInstalled) {
+    document.addEventListener('keydown', handleCinebyVideoKeyEvents);
+    videoKeyHandlerInstalled = true;
+  }
   
   // Special handling for Cineby.at
   if (window.location.hostname.includes('cineby.at')) {
     // Make sure we can manipulate the video
     video.setAttribute('controlsList', 'nodownload');
     
-    // Store a reference for our Cineby-specific handlers
-    window.tflixVideoElement = video;
-    
     // Store the current movie page URL to use for back navigation
     window.tflixLastMovieUrl = window.location.href;
-    
-    // Add event listeners for TV remote navigation during playback
-    document.addEventListener('keydown', handleCinebyVideoKeyEvents);
     
     // Force a play attempt with retry logic for Cineby
     let playAttempts = 0;
@@ -377,9 +382,15 @@ function handleCinebyVideoKeyEvents(e) {
   if (!video) return;
   
   // Only process if we're on a video page and the video is visible
-  if (!window.location.pathname.includes('/movie/') || 
-      video.style.display === 'none' || 
+  if (video.style.display === 'none' ||
       video.style.visibility === 'hidden') {
+    return;
+  }
+
+  if (subtitleController && subtitleController.handleKey(e)) {
+    e.preventDefault();
+    e.stopPropagation();
+    showControls();
     return;
   }
   
@@ -559,6 +570,9 @@ function createPlayerControls() {
   playerControls.appendChild(playPauseBtn);
   playerControls.appendChild(progressBar);
   playerControls.appendChild(fastForwardBtn);
+
+  subtitleController = createSubtitleController(videoElement, playerControls, showToast);
+  playerControls.appendChild(subtitleController.button);
   
   // Find video container to append controls
   const videoContainer = videoElement.parentElement;
