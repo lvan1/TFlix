@@ -29,9 +29,6 @@ function initializeUI() {
   // Initialize video player enhancements when a video is played
   setupVideoPlayerObserver();
 
-  // Make test installs unmistakable on the TV and help distinguish them from the published
-  // @zyrecx/tflix package while diagnosing TizenBrew caching/install issues.
-  showToast('TFlix Test build loaded');
 }
 
 /**

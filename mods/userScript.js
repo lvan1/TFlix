@@ -1,7 +1,6 @@
 // Order matters: adsControl and antiDevtool patch globals the site reads at boot, and
 // playerDetection defines window.__tflixPlayerActive before the polyfill's first keydown can
 // fire - all must run before anything else touches the page.
-import './tv-diagnostics.js';
 import './adsControl.js';
 import './antiDevtool.js';
 import './playerDetection.js';

@@ -1,7 +1,7 @@
 {
   "name": "@lvan1/tflix-test",
   "appName": "TFlix Test",
-  "version": "1.4.3-test.2",
+  "version": "1.4.3-test.3",
   "description": "TFlix Test transforms Cineby.at into a TV-friendly experience for Samsung TVs running TizenBrew with enhanced remote navigation.",
   "packageType": "mods",
   "websiteURL": "https://www.cineby.at",
