@@ -182,22 +182,17 @@ function enhanceVideoPlayer() {
  * Enhance search functionality
  */
 function enhanceSearchFunctionality() {
-  // Look for search icon, button or input
+  // Cineby's search is a client-side modal. Enhance only the native interactive
+  // controls and leave their click behaviour to the site. The previous generic
+  // click handler redirected every Cineby search button to the obsolete /search
+  // route immediately after the site opened its modal.
   const searchSelectors = [
-    // Common search elements
     'input[type="search"]',
     'input[placeholder*="search" i]',
     'input[placeholder*="find" i]',
     'button[aria-label*="search" i]',
-    '.search-button',
-    '.search-icon',
-    'a[href*="search"]',
-    // Icon based search
-    'svg[class*="search" i]',
-    'i[class*="search" i]',
-    // Parent containers
-    '.search-container',
-    'form[action*="search"]'
+    'button.search-button',
+    'a[href*="search"]'
   ];
   
   const searchElements = document.querySelectorAll(searchSelectors.join(', '));
@@ -212,67 +207,11 @@ function enhanceSearchFunctionality() {
     // Add specific styling to make it stand out
     element.classList.add('tflix-search-element');
     
-    // Make parent element focusable too
-    if (element.parentElement && !element.parentElement.getAttribute('tabindex')) {
-      element.parentElement.setAttribute('tabindex', '0');
-      element.parentElement.setAttribute('data-tflix-search-parent', 'true');
-    }
-    
-    // Ensure clicking activates search
-    element.addEventListener('click', () => {
-      activateSearch(element);
-    });
-    
     // On focus, show a toast to inform user they can press OK to search
     element.addEventListener('focus', () => {
       showSearchToast();
     });
   });
-  
-  // Add specific handler for the navigation/header area
-  addSearchNavigationHandler();
-}
-
-/**
- * Add specific handler for navigation/header search
- */
-function addSearchNavigationHandler() {
-  // Try to find a header or navigation
-  const headerElements = document.querySelectorAll('header, nav, .header, .navigation, .top-bar');
-  
-  headerElements.forEach(header => {
-    // Look for potential search elements in the header
-    const searchLink = Array.from(header.querySelectorAll('a')).find(a => 
-      a.textContent.toLowerCase().includes('search') || 
-      a.href.includes('search') ||
-      a.getAttribute('aria-label')?.toLowerCase().includes('search')
-    );
-    
-    if (searchLink && claimForEnhancement(searchLink, 'search-nav')) {
-      searchLink.setAttribute('tabindex', '0');
-      
-      // Add clear styling
-      searchLink.classList.add('tflix-search-element');
-      
-      // Ensure Enter key activates search
-      searchLink.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          window.location.href = searchLink.href;
-        }
-      });
-    }
-  });
-  
-  // If the site is cineby.at, specifically look for the search link
-  if (window.location.hostname.includes('cineby.at')) {
-    // Make search more accessible without requiring keyboard shortcuts
-    const searchLinks = document.querySelectorAll('a[href*="search"]');
-    searchLinks.forEach(link => {
-      link.setAttribute('tabindex', '0');
-      link.classList.add('tflix-search-element');
-    });
-  }
 }
 
 /**
@@ -286,38 +225,6 @@ function isInputElement(element) {
   return tagName === 'input' || tagName === 'textarea' || 
          element.isContentEditable || 
          element.getAttribute('role') === 'textbox';
-}
-
-/**
- * Activate search functionality
- * @param {Element} element - The search element
- */
-function activateSearch(element) {
-  // If it's an input, focus it
-  if (element.tagName.toLowerCase() === 'input') {
-    element.focus();
-    return;
-  }
-  
-  // If it's a link to search page, navigate to it
-  if (element.tagName.toLowerCase() === 'a' && 
-      (element.href.includes('search') || element.getAttribute('href')?.includes('search'))) {
-    window.location.href = element.href;
-    return;
-  }
-  
-  // If it's a button inside a form, submit the form
-  const form = element.closest('form');
-  if (form) {
-    form.submit();
-    return;
-  }
-  
-  // For cineby.at specifically, navigate to the search page
-  if (window.location.hostname.includes('cineby.at')) {
-    window.location.href = 'https://www.cineby.at/search';
-    return;
-  }
 }
 
 /**
@@ -405,57 +312,6 @@ function setupVideoPlayerControls(video) {
     video.volume = 0.8; // Default to 80% volume
   }
   
-  // Add time display
-  addVideoTimeDisplay(video);
-}
-
-/**
- * Add time display to the video
- * @param {HTMLElement} video - The video element
- */
-function addVideoTimeDisplay(video) {
-  if (!video) return;
-  
-  // Create time display element
-  const timeDisplay = document.createElement('div');
-  timeDisplay.className = 'tflix-video-time';
-  
-  // Add to the video container
-  const videoContainer = video.parentElement;
-  if (videoContainer) {
-    videoContainer.appendChild(timeDisplay);
-  }
-  
-  // Update time display
-  function updateTimeDisplay() {
-    if (!video.paused) {
-      const current = formatTime(video.currentTime);
-      const total = formatTime(video.duration);
-      timeDisplay.textContent = `${current} / ${total}`;
-      timeDisplay.style.display = 'block';
-      
-      // Hide after 3 seconds if video is playing
-      setTimeout(() => {
-        if (!video.paused) {
-          timeDisplay.style.display = 'none';
-        }
-      }, 3000);
-    }
-  }
-  
-  // Format time in MM:SS
-  function formatTime(seconds) {
-    if (isNaN(seconds)) return '00:00';
-    const mins = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-  }
-  
-  // Update time on timeupdate event
-  video.addEventListener('timeupdate', updateTimeDisplay);
-  video.addEventListener('play', updateTimeDisplay);
-  video.addEventListener('pause', updateTimeDisplay);
-  video.addEventListener('seeking', updateTimeDisplay);
 }
 
 /**

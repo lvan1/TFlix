@@ -134,17 +134,11 @@ body.tflix-navigation-mode {
   transform: translate(-50%, -50%) scale(1);
 }
 
-/* Video time display */
+/* Older TFlix releases injected this timer over the top-right of playback.
+ * Keep it suppressed in case Cineby's client-side navigation preserves a
+ * stale node while the updated module takes over. */
 .tflix-video-time {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  background: rgba(0, 0, 0, 0.7);
-  color: white;
-  padding: 8px 12px;
-  border-radius: 5px;
-  font-size: 16px;
-  z-index: 9998;
+  display: none !important;
 }
 
 /* Enhanced Play Button styling. The site's own "is this a play button" heuristic
