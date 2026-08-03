@@ -1,5 +1,5 @@
 {
-  "name": "@lvan1/tflix-test",
+  "name": "@lvan1/tflix",
   "appName": "TFlix",
   "version": "1.4.3-test.6",
   "description": "TFlix transforms Cineby.at into a TV-friendly experience for Samsung TVs running TizenBrew with enhanced remote navigation.",
@@ -28,12 +28,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/lvan1/TFlixtest"
+    "url": "https://github.com/lvan1/TFlix"
   },
   "bugs": {
-    "url": "https://github.com/lvan1/TFlixtest/issues"
+    "url": "https://github.com/lvan1/TFlix/issues"
   },
-  "homepage": "https://github.com/lvan1/TFlixtest#readme",
+  "homepage": "https://github.com/lvan1/TFlix#readme",
   "keywords": [
     "tizenbrew",
     "tizen",
