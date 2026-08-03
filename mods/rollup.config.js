@@ -8,7 +8,7 @@ export default [
     output: {
       // Version the runtime filename so untagged jsDelivr releases cannot fall
       // back to a permanently cached file from an older tag.
-      file: '../dist/userScript-v1.4.3-test.6.js',
+      file: '../dist/userScript-v1.4.3-test.7.js',
       format: 'iife'
     },
     plugins: [
